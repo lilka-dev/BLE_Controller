@@ -1,35 +1,35 @@
 #pragma once
 
-#include <BleGamepad.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/timers.h>
 #include "fps.h"
 #include "timer.h"
+#include <BleController.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/timers.h>
 
 #define NUM_OF_BUTTONS 8
 
-namespace ble_gamepad_app {
+namespace ble_controller_app {
 
-class Controller : public BleGamepad {
+class Controller : public BleController {
 public:
-    Controller();
-    ~Controller();
+  Controller();
+  ~Controller();
 
-    bool start();
-    bool isActive();
-    void stop();
+  bool start();
+  bool isActive();
+  void stop();
 
 private:
-    static void controllerTimerCallback(TimerHandle_t xTimer);
-    void updateControllerState();
-    bool updateBatteryLevel();
-    bool updateButtons();
+  static void controllerTimerCallback(TimerHandle_t xTimer);
+  void updateControllerState();
+  bool updateBatteryLevel();
+  bool updateButtons();
 
-    bool active;
-    TimerHandle_t controllerTimer;
-    FPS mainLoopFps;
-    int batteryLevel;
-    Timer checkBatteryLevelTimer;
+  bool active;
+  TimerHandle_t controllerTimer;
+  FPS mainLoopFps;
+  int batteryLevel;
+  Timer checkBatteryLevelTimer;
 };
 
-} // namespace ble_gamepad_app
+} // namespace ble_controller_app
