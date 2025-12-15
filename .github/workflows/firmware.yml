@@ -1,0 +1,79 @@
+name: firmware
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  pull_request: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+            ./.pio
+          key: ${{ runner.os }}-ble-controller
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build and package firmware
+        run: |
+          mkdir -p out
+          
+          # Build English version
+          echo "Building English version"
+          pio run -e en
+          cp .pio/build/en/firmware.bin out/BLE_Controller_en.bin
+          cp .pio/build/en/partitions.bin out/partitions.bin
+          cp .pio/build/en/bootloader.bin out/bootloader.bin
+          
+          # Build Ukrainian version
+          echo "Building Ukrainian version"
+          pio run -e uk
+          cp .pio/build/uk/firmware.bin out/BLE_Controller_uk.bin
+          
+          # Create merged binaries
+          pip install esptool
+          
+          esptool.py --chip esp32s3 merge_bin \
+            -o out/BLE_Controller_merged_en.bin \
+            0x0 out/bootloader.bin \
+            0x8000 out/partitions.bin \
+            0x10000 out/BLE_Controller_en.bin
+          
+          esptool.py --chip esp32s3 merge_bin \
+            -o out/BLE_Controller_merged_uk.bin \
+            0x0 out/bootloader.bin \
+            0x8000 out/partitions.bin \
+            0x10000 out/BLE_Controller_uk.bin
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BLE-Controller-firmware
+          path: out/*.bin
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: out/*.bin

@@ -3,8 +3,8 @@
 #define BLE_CONTROLLER_APP_NAME "BLE Controller"
 #define DEBUG false
 #define DEVICE_NAME "Lilka BLE Controller"
-#define UI_DELAY_MILLIS 68               // 15 fps
-#define CONTROLLER_TIMER_DELAY_MILLIS 34 // 30 fps
+#define UI_DELAY_MILLIS 68
+#define CONTROLLER_TIMER_DELAY_MILLIS 34
 #define LOG_TAG "BLE Controller"
 #define UI_FPS_WATCHER "VIEW LOOP"
 #define MAIN_LOOP_FPS_WATCHER "MAIN LOOP"
@@ -13,3 +13,15 @@
 #define BATTERY_LEVEL_UNKNOWN -1
 #define BATTERY_LEVEL_NIN 0
 #define BATTERY_LEVEL_MAX 100
+#define MODE_SWITCH_HOLD_TIME 3000
+
+#define AXIS_MIN 0
+#define AXIS_MAX 32767
+#define AXIS_CENTER 16383
+
+#define MOUSE_SPEED 15
+#define SCROLL_SPEED 2
+
+enum DeviceMode { MODE_GAMEPAD = 0, MODE_MOUSE = 1, MODE_KEYBOARD = 2 };
+
+#define NUM_OF_BUTTONS 8

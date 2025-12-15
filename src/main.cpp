@@ -1,42 +1,54 @@
+/*
+ * Lilka BLE Controller App
+ * Multi-mode BLE HID device: Gamepad, Mouse, Keyboard
+ * Hold SELECT + START for 3 seconds to switch modes
+ */
+
+#include "app_controller.h"
 #include "defines.h"
+#include "ui.h"
 #include <Arduino.h>
 #include <lilka.h>
 
-#include "controller.h"
-#include "fps.h"
-
 using namespace ble_controller_app;
 
-Controller *bleGController = nullptr;
-FPS *uiFps = nullptr;
+AppController controller;
+UI ui(280, 240);
+
+unsigned long lastBatteryUpdate = 0;
+int cachedBatteryLevel = 100;
+#define BATTERY_UPDATE_INTERVAL 30000
+
+int getBatteryLevel() {
+  unsigned long now = millis();
+  if (now - lastBatteryUpdate >= BATTERY_UPDATE_INTERVAL ||
+      lastBatteryUpdate == 0) {
+    int level = lilka::battery.readLevel();
+    if (level >= 0) {
+      cachedBatteryLevel = level;
+      controller.setBatteryLevel(level);
+    }
+    lastBatteryUpdate = now;
+  }
+  return cachedBatteryLevel;
+}
 
 void setup() {
+  Serial.begin(115200);
   lilka::begin();
-
-  bleGController = new Controller();
-  uiFps = new FPS(UI_FPS_WATCHER, UI_DELAY_MILLIS);
-
-  if (!bleGController->start()) {
-    lilka::serial_log("[%s] Failed to start BLE controller", LOG_TAG);
-    return;
-  }
-
-  lilka::serial_log("[%s] BLE Controller started successfully", LOG_TAG);
+  controller.begin();
 }
 
 void loop() {
-  if (bleGController && bleGController->isActive()) {
-    uiFps->onStartFrame();
+  lilka::State state = lilka::controller.getState();
+  controller.update(state);
 
-    // Handle UI updates here
-    // For now, just delay
-    vTaskDelay(UI_DELAY_MILLIS / portTICK_PERIOD_MS);
+  ui.drawFrame(controller.getMode(), controller.isConnected(),
+               getBatteryLevel(), controller.isModeSwitchInProgress(),
+               controller.getModeSwitchProgress(), state,
+               controller.getKeyboardCursorX(), controller.getKeyboardCursorY(),
+               controller.getKeyboardLayer(), controller.getKeyboardText());
 
-    uiFps->onEndFrame();
-    if (DEBUG) {
-      uiFps->logEveryOneSecond();
-    }
-  } else {
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-  }
+  lilka::display.drawCanvas(ui.getFrameBuffer());
+  delay(16);
 }

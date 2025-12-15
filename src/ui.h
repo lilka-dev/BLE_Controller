@@ -1,5 +1,6 @@
 #pragma once
 
+#include "defines.h"
 #include <Arduino.h>
 #include <lilka.h>
 
@@ -8,33 +9,30 @@ namespace ble_controller_app {
 class UI {
 public:
   UI(uint16_t width, uint16_t height);
-  void drawFrame(bool useDiffColors, int lastSecondsToExit);
+  void drawFrame(DeviceMode mode, bool isConnected, int batteryLevel,
+                 bool modeSwitchInProgress, int switchProgress,
+                 const lilka::State &state, int kbCursorX = 0,
+                 int kbCursorY = 0, int kbLayer = 0,
+                 const char *kbText = nullptr);
   lilka::Canvas *getFrameBuffer();
 
 private:
-  static constexpr const int NUM_OF_STEPS = 7;
-
-  static constexpr const uint16_t GRAY_COLORS[] = {
-      0xFFFF, 0xD6BA, 0xAD55, 0x8410, 0x52AA, 0x2965, 0x0};
-  static constexpr const uint16_t YELLOW_COLORS[] = {
-      0xFEC0, 0xDDC0, 0xBCE0, 0x93E0, 0x72E0, 0x4A00, 0x2900};
-  static constexpr const uint16_t BLUE_COLORS[] = {
-      0x03BF, 0x033B, 0x02B7, 0x0232, 0x01AE, 0x0129, 0x0085};
-
-  static constexpr const char *USER_MESSAGE_TEXTS[] = {
-      "Для виходу", "затисніть", "select %d сек"};
-
   lilka::Canvas buffer;
+  const uint16_t width, height;
 
-  void drawBoundPoint(uint16_t color, int pos);
-  void drawUserMessage(int lastSecondsToExit);
+  void drawHeader(DeviceMode mode, bool isConnected, int batteryLevel);
+  void drawModeIndicator(DeviceMode mode);
+  void drawConnectionStatus(bool isConnected);
+  void drawBatteryLevel(int batteryLevel);
+  void drawModeSwitchProgress(int progress);
+  void drawGamepadMode(const lilka::State &state);
+  void drawMouseMode(const lilka::State &state);
+  void drawKeyboardMode(const lilka::State &state, int cursorX, int cursorY,
+                        int layer, const char *text);
+  void drawPressedKeys(const lilka::State &state);
+  void drawInstructions(DeviceMode mode);
 
-  const uint16_t sizeX, sizeY, width, height;
-  const int maxPosSide0, maxPosSide1, maxPosSide2, maxPosSide3, quarter;
-  int boundPos;
-
-  const int16_t userMessageOriginX, userMessageOriginY, userMessageDxMax,
-      userMessageDxMin;
-  int8_t userMessageDx, userMessageDy, userMessageDirection;
+  const char *getModeString(DeviceMode mode);
 };
+
 } // namespace ble_controller_app
