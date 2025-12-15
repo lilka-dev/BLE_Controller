@@ -47,13 +47,11 @@ pio run -e en -t upload
 pio run -e uk -t upload
 ```
 
-#### Option 2: Flash from artifacts (no build required)
+#### Option 2: Flash from release (no build required)
 
 1. **Download firmware**
-   - Go to [Actions](https://github.com/lilka-dev/BLE_Controller/actions)
-   - Click the latest successful workflow run
-   - Download `BLE-Controller-firmware` artifact
-   - Extract the ZIP file
+   - Go to [Releases](https://github.com/lilka-dev/BLE_Controller/releases)
+   - Download `BLE_Controller_merged_en.bin` (or `_uk.bin` for Ukrainian)
 
 2. **Open ESPTool**
    - Go to [ESPTool Web Flasher](https://espressif.github.io/esptool-js/)
@@ -130,13 +128,11 @@ pio run -e en -t upload
 pio run -e uk -t upload
 ```
 
-#### Варіант 2: Прошити з артефактів (без збірки)
+#### Варіант 2: Прошити з релізу (без збірки)
 
 1. **Завантажити прошивку**
-   - Перейдіть до [Actions](https://github.com/lilka-dev/BLE_Controller/actions)
-   - Натисніть на останній успішний workflow
-   - Завантажте артефакт `BLE-Controller-firmware`
-   - Розпакуйте ZIP файл
+   - Перейдіть до [Releases](https://github.com/lilka-dev/BLE_Controller/releases)
+   - Завантажте `BLE_Controller_merged_uk.bin` (або `_en.bin` для англійської)
 
 2. **Відкрити ESPTool**
    - Перейдіть на [ESPTool Web Flasher](https://espressif.github.io/esptool-js/)

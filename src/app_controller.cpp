@@ -81,7 +81,8 @@ void AppController::begin() {
   config->setWhichAxes(true, true, false, false, false, false, false, false);
   config->setAxesMin(AXIS_MIN);
   config->setAxesMax(AXIS_MAX);
-  config->setHidReportId(CONTROLLER_REPORT_ID); // Report ID 1 (not 3 - conflicts with mouse)
+  config->setHidReportId(
+      CONTROLLER_REPORT_ID); // Report ID 1 (not 3 - conflicts with mouse)
 
   bleController = new BleController(DEVICE_NAME);
   bleController->begin(config);
