@@ -32,6 +32,12 @@ Multi-mode Bluetooth HID Controller for Lilka v2.
 
 **Hold START + SELECT for 3 seconds to switch mode**
 
+### Screenshots
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| ![Screenshot 1](images/image0.png) | ![Screenshot 2](images/image1.png) | ![Screenshot 3](images/image2.png) | ![Screenshot 4](images/image3.png) |
+
 ### How to Flash
 
 #### Option 1: Build from source
@@ -112,6 +118,12 @@ pio run -e uk -t upload
 | Select | Кнопка 6 | - | Змінити мову (WIN+Space) |
 
 **Утримуйте START + SELECT 3 секунди для зміни режиму**
+
+### Скріншоти
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| ![Скріншот 1](images/image0.png) | ![Скріншот 2](images/image1.png) | ![Скріншот 3](images/image2.png) | ![Скріншот 4](images/image3.png) |
 
 ### Як прошити
 
